@@ -52,7 +52,6 @@
                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
                   (click)="deleteUser(user.id, $event)">
                 </button>
-               
               </div>
             </td>
           </tr>
@@ -147,7 +146,7 @@
       </div>
       <br>
       <div class="text-center">
-        <h5>Valider / Desactiver</h5>
+        <h5>Activer / Desactiver</h5>
         <p-inputSwitch [ngModel]="checked" (ngModelChange)="oneCheckValid($event)"></p-inputSwitch>
       </div>
     </div>

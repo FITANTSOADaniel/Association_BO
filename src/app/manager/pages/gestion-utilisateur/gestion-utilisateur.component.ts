@@ -58,11 +58,10 @@ export class GestionServicesComponent implements OnInit {
   userBody = {
     first_name: "",
     last_name: "",
-    password: "",
     email: "",
     association_id: null,
     level_id: 1,
-    is_admin: 0
+    is_admin: null
   };
   modalCreateUser: boolean = false;
   associations: any[] = [];
@@ -160,7 +159,6 @@ export class GestionServicesComponent implements OnInit {
     this.userBody.last_name = "";
     this.userBody.email = "";
     this.userBody.is_admin = 0;
-    this.userBody.password = "";
     this.userBody.association_id= "";
     this.userBody.level_id= 1;
     this.checked = false;
@@ -236,7 +234,8 @@ export class GestionServicesComponent implements OnInit {
     this.lastValisation=2;
     this.checkDetailsUsers = true;
     this.serviceService.getDetailsUsers(id).subscribe((data: any) => {
-      this.detailUser = data.user; 
+      this.detailUser = data.clients[0]; 
+      this.userBody = this.detailUser;
       this.checked = this.detailUser.is_valid === 1;
       this.lastValisation=this.detailUser.is_valid;
     });
@@ -286,7 +285,7 @@ export class GestionServicesComponent implements OnInit {
       this.messageService.add({
         severity: "error",
         summary: "Erreur",
-        detail: "Format de numéro de téléphone ou email invalide",
+        detail: "Format de l'email invalide",
       });
       return;
     }
@@ -307,6 +306,7 @@ export class GestionServicesComponent implements OnInit {
           this.disableUpdate = true;
           this.spinner.show("spinnerLoader");
           this.detailUser.message="Votre compte a été "+messageValue[this.detailUser.is_valid];
+          console.log(this.detailUser);
           this.serviceService.userStateNotification(this.detailUser).subscribe(() => {
             this.getAllUsers();
             this.checkDetailsUsers = false;
@@ -333,7 +333,8 @@ export class GestionServicesComponent implements OnInit {
     } else {
       this.disableUpdate = true;
       this.spinner.show("spinnerLoader");
-      this.serviceService.updateUser(this.detailUser).subscribe(() => {
+      console.log(this.userBody);      
+      this.serviceService.updateUser(this.userBody).subscribe(() => {
         this.getAllUsers();
         this.checkDetailsUsers = false;
         this.disableUpdate = false;

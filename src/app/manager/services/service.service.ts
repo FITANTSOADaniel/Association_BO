@@ -4,6 +4,7 @@ import { CookieService } from "ngx-cookie-service";
 import { BehaviorSubject, Observable, map } from "rxjs";
 import { environment } from "src/environments/environment";
 import { jwtDecode } from "jwt-decode";
+import { PhotoService } from '../../demo/service/photo.service';
 
 @Injectable({
   providedIn: "root",
@@ -18,8 +19,12 @@ export class ServiceService {
   }
 
   getAllAssociations(){
-    return this.http.get(`${environment.url}/api/association`, {});
+    return this.http.get(`${environment.url}/api/associations`, {});
   }
+
+  getAssociations(data: any): any { 
+    return this.http.post(`${environment.url}/api/findAssociation`, data);
+}
 
   getAllLevel(){
     return this.http.get(`${environment.url}/api/level`, {})
@@ -68,6 +73,10 @@ export class ServiceService {
 
   updateUser(data: any) {
     return this.http.post(`${environment.url}/api/users/info`, data);
+  }
+
+  disable(data: any){
+    return this.http.post(`${environment.url}/api/users/data`, data);
   }
 
   logout(): Observable<any> {
@@ -203,7 +212,16 @@ export class ServiceService {
   getDetailsPub(id: any): any {
     return this.http.get(`${environment.url}/api/banieres/${id}`, id);
   }
+  getDetailsAssoc(id: any ): any {
+    return this.http.post(`${environment.url}/api/association/${id}`, id)
+  }
   getDetailsCard(id: any): any {
     return this.http.get(`${environment.url}/api/cartes/${id}`, id);
+  }
+  upload_logo(data : any){
+    return this.http.post<any>(`${environment.url}/api/upload_logo`, data)
+  }
+  deleteAssociation(id: any){
+    return this.http.delete(`${environment.url}/api/association/${id}`, id);
   }
 }

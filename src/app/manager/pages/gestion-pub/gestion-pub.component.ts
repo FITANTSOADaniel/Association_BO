@@ -6,8 +6,6 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { DatePipe } from "@angular/common";
 import { Router } from "@angular/router";
 import { AlertService } from "../../services/alert.service";
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { FileUploadModule } from 'primeng/fileupload';
 interface expandedRows {
   [key: string]: boolean;
 }
@@ -25,13 +23,14 @@ export class GestionPubComponent implements OnInit {
   expandedRows: expandedRows = {};
   environments: any;
   skeleton: boolean = true;
-  checkDetailsPub: boolean = false;
+  checkDetails: boolean = false;
   ajouterDoc: boolean = false;
   pathUrl: string;
+  url : string;
   isFileUploaded:boolean=false;
 
   keyWord : string="";
-  dataNumberShow: number= 10;
+  dataNumberShow: number= 3;
   offset:number=0;
   limit:number= this.dataNumberShow;
   currentPage=1;
@@ -39,12 +38,17 @@ export class GestionPubComponent implements OnInit {
   f: any[] = [];
 
   associations: any[] = [];
+  detailAssoc = {
+    name: "",
+    desc: ""
+  }
   detailPub = {
     id:0,
     titre: "",
     link: "",
     is_active: 0, 
   };
+  selectedFile: File | null = null;
   isAdmin = [
     { name: "Admin", value: 1 },
     { name: "Client", value: 0 },
@@ -77,11 +81,30 @@ export class GestionPubComponent implements OnInit {
     private statusService : AlertService
   ) {
     this.pathUrl = environment.PATH_URL;
+    this.url = "http://localhost:8000/api/upload_logo"
   }
 
   ngOnInit() {
     this.environments = environment;
     this.getAllAssociations();
+  }
+
+  customUpload(event: any) {
+    this.selectedFile = event.files;
+    console.log('Fichiers sélectionnés:', this.selectedFile);
+  }
+
+  uploadFiles() {
+    if (this.selectedFile) {
+      console.log('Uploading file:', this.selectedFile)
+      this.serviceService.upload_logo(this.detailAssoc).subscribe(
+        (data: any) => {
+          console.log(data)
+        }
+      )
+    } else {
+      console.log('Aucun fichier sélectionné pour l’upload');
+    }
   }
 
   showModalCreateUser() {
@@ -145,15 +168,21 @@ setFileDisabled(){
   } 
 }
 getDetailsPub(id: any) {
-  this.checkDetailsPub = true;
+  this.checkDetails = true;
   this.serviceService.getDetailsPub(id).subscribe((data: any) => {
     this.detailPub = data.pub;
     this.checked = this.detailPub.is_active=== 1;
   });
 }
 
- 
-
+getDetailsAssoc(id: any) {
+  this.checkDetails = true
+  this.serviceService.getDetailsAssoc(id).subscribe(
+    (data: any ) => {
+      this.detailAssoc = data.associations[0]
+    }
+  )
+}
 getFilePath(file: string) {
   return file.split("public/filaka/")[1];
 }
@@ -208,7 +237,7 @@ onUploadUpdate() {
       this.getAllAssociations();
       this.f = [];
       this.clearDetail();
-      this.checkDetailsPub = false;
+      this.checkDetails = false;
       this.disableUpdate = false;
       this.messageService.add({
         severity: "success",
@@ -248,7 +277,7 @@ onUploadUpdate() {
               this.getAllAssociations();
               this.f = [];
               this.clearDetail();
-              this.checkDetailsPub = false;
+              this.checkDetails = false;
               this.disableUpdate = false;
               this.messageService.add({
                 severity: "success",
@@ -275,7 +304,14 @@ onUploadUpdate() {
   } 
 
   } 
-onUpload() { 
+  onUpload(event: any) {
+    if (event && event.files) {
+      console.log('Fichiers téléchargés:', event.files);
+    } else {
+      console.log('Aucun fichier téléchargé');
+    }
+  }  
+onUpload1() { 
   
   if (this.pubBody.titre === "") {
     this.messageService.add({
@@ -349,9 +385,6 @@ onUpload() {
         this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
       }
     );
-  
-
-
 } 
 
   clearForm() {
@@ -401,10 +434,9 @@ onUpload() {
       limit: this.limit
     }
     
-    this.serviceService.getAllAssociations().subscribe((data: any) => {
-      
+    this.serviceService.getAssociations(body).subscribe((data: any) => {
       this.associations = data.associations;
-      this.totalPages=data.pubCount;
+      this.totalPages=data.associationCount;
       this.getPageNumbers();
       this.skeleton = false;
     },
@@ -439,7 +471,7 @@ onUpload() {
   deletePublicitie(id: any, event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: "Etes-vous sur de supprimer cette publicité?",
+      message: "Etes-vous sur de supprimer cette association?",
       header: "Confirmation",
       icon: "pi pi-info-circle",
       acceptButtonStyleClass: "p-button-danger p-button-text",
@@ -451,11 +483,11 @@ onUpload() {
 
       accept: () => {
         this.spinner.show("spinnerLoader");
-        this.serviceService.deletePublicity(id).subscribe(() => {
+        this.serviceService.deleteAssociation(id).subscribe(() => {
           this.messageService.add({
             severity: "info",
             summary: "Confirmé",
-            detail: "Publicité supprimée",
+            detail: "Association supprimée",
           });
           this.getAllAssociations();
           this.spinner.hide("spinnerLoader");
@@ -473,6 +505,6 @@ onUpload() {
   }
 
   hideAjoutServicePopup() {
-    this.checkDetailsPub = false;
+    this.checkDetails = false;
   }
 }
