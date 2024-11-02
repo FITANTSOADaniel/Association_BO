@@ -140,6 +140,9 @@ export class ServiceService {
     return this.http.post<any>(`${environment.url}/api/upload`, uploadData);
   }
 
+  registerAssociation(data: any){
+    return this.http.post<any>(`${environment.url}/api/association`, data);
+  }
   registerUser(data: any) {
     return this.http.post<any>(`${environment.url}/api/register`, data);
   }

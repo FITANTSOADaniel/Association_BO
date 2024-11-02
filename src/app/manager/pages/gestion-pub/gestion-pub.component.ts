@@ -89,6 +89,8 @@ export class GestionPubComponent implements OnInit {
     this.getAllAssociations();
   }
 
+  
+
   customUpload(event: any) {
     this.selectedFile = event.files;
     console.log('Fichiers sélectionnés:', this.selectedFile);
@@ -183,8 +185,9 @@ getDetailsAssoc(id: any) {
     }
   )
 }
-getFilePath(file: string) {
-  return file.split("public/filaka/")[1];
+getFilePath(file: string): string {
+  console.log("Chemin du fichier:", file); // Vérifier le contenu de `file`
+  return file.includes("public/") ? file.split("public/")[1] : file;
 }
 getFileType(file: string) {
   return file.split(".")[1];
@@ -304,31 +307,24 @@ onUploadUpdate() {
   } 
 
   } 
-  onUpload(event: any) {
+  onUpload2(event: any) {
     if (event && event.files) {
       console.log('Fichiers téléchargés:', event.files);
     } else {
       console.log('Aucun fichier téléchargé');
     }
   }  
-onUpload1() { 
+onUpload() { 
   
-  if (this.pubBody.titre === "") {
+  if (this.detailAssoc.name === "" || this.detailAssoc.desc === "") {
     this.messageService.add({
       severity: "error",
           summary: "",
-          detail: "Champ titre manquant",
+          detail: "Champ manquant",
     });
     return;
   }
-  if (this.pubBody.link != "" && !this.isLink(this.pubBody.link)) {
-    this.messageService.add({
-      severity: "error",
-          summary: "",
-          detail: "Format du lien invalide ",
-    });
-    return;
-  }
+ 
  
   if (this.f.length ==0 || this.f.length>1) {
     this.messageService.add({
@@ -350,14 +346,12 @@ onUpload1() {
         if (data.message === "success") {
           for (let index = 0; index < data.paths.length; index++) {
             var body = {
-              titre: this.pubBody.titre,
-              path: this.getFilePath(data.paths[index]),
-              link: this.pubBody.link, 
-              type: this.getImageType(this.getFilePath(data.paths[index])),
-              is_active:this.pubBody.is_active
+              name: this.detailAssoc.name,
+              desc:this.detailAssoc.desc,
+              logo: this.getFilePath(data.paths[index])
             };
-  
-            this.serviceService.registerPublicity(body).subscribe(
+            console.log(body);
+            this.serviceService.registerAssociation(body).subscribe(
               () => {
                 this.getAllAssociations();
                 this.f = [];
@@ -367,7 +361,7 @@ onUpload1() {
                 this.modalCreateUser = false;
                 this.messageService.add({
                   severity: "success",
-                  summary: "Publicité ajoutée",
+                  summary: "Association ajoutée",
                   detail: "",
                 });
               },

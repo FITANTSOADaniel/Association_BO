@@ -155,15 +155,14 @@
             (onUpload)="onUpload($event)"
           >
           </p-fileUpload> -->
-          <p-fileUpload
-            name="file"
-            [url]=url
-            accept="image/*"
-            [auto]="false"
-            (onSelect)="customUpload($event)"
-          >
+          <p-fileUpload [showUploadButton]="false" cancelLabel="Annuler" chooseLabel="Choisir un fichier" name="demo[]"
+          (onSelect)="getFileUpload($event)" (onUpload)="onUpload()" (onClear)="onCancel()" [multiple]="true" accept="image/*"
+          [disabled]="isFileUploaded"
+        >
           </p-fileUpload>
-          <button (click)="uploadFiles()">Uploader le fichier</button>
+          <div class="text-center">
+            <p-button icon="pi pi-check" label="Valider" (click)="onUpload()" severity="info"></p-button>
+          </div>
           <br>
         
       </div>
@@ -180,7 +179,7 @@
     <div class="col-12 md:col-12">
     
       <div>
-        <h5>Nm de l'association</h5>
+        <h5>Nom de l'association</h5>
         <input type="text" pInputText [(ngModel)]="detailAssoc.name" >
         <h5>desc</h5>
         <input type="text" pInputText [(ngModel)]="detailAssoc.desc" >
@@ -214,16 +213,14 @@
               </div>
             </ng-template>
           </p-fileUpload> -->
-          <p-fileUpload
-            name="file"
-            [url]=url
-            accept="image/*"
-            [auto]="false"
-            (onSelect)="customUpload($event)"
-          >
+          <p-fileUpload [showUploadButton]="false" cancelLabel="Annuler" chooseLabel="Choisir un fichier" name="demo[]"
+          (onSelect)="getFileUpload($event)" (onUpload)="onUpload()" (onClear)="onCancel()" [multiple]="true" accept="image/*"
+          [disabled]="isFileUploaded">
           </p-fileUpload>
           <br>
-          <button (click)="uploadFiles()">Uploader le fichier</button>
+          <div class="text-center">
+            <p-button icon="pi pi-check" label="Valider" (click)="onUpload()" severity="info"></p-button>
+          </div>
         
       </div>
       <br>
