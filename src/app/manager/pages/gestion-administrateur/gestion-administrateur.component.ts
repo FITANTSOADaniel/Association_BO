@@ -169,6 +169,10 @@ export class GestionAdministrateurComponent implements OnInit {
   }
   
   valider(){
+    if(this.selected.length === 0){
+      this.messageService.add({severity: 'info', summary:'Info', detail: 'Selectionnée avant d\'accepter'})
+      return
+    }else{
     this.spinner.show("spinnerLoader");
     if(this.selected.length !== 0){
       for(let i=0; i<this.selected.length; i++){
@@ -178,6 +182,7 @@ export class GestionAdministrateurComponent implements OnInit {
       this.getAllOrders();
     }
     this.visible = true
+  }
   }
 
   getDEtailsUsers(id: any) {

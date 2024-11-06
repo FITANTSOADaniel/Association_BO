@@ -146,22 +146,13 @@
               </div>
             </ng-template>
           </p-fileUpload> -->
-          <!-- <p-fileUpload
-            name="file"
-            url="http://your-backend-url/upload"
-            accept="image/*"
-            maxFileSize="1000000"
-            [auto]="true"
-            (onUpload)="onUpload($event)"
-          >
-          </p-fileUpload> -->
           <p-fileUpload [showUploadButton]="false" cancelLabel="Annuler" chooseLabel="Choisir un fichier" name="demo[]"
           (onSelect)="getFileUpload($event)" (onUpload)="onUpload()" (onClear)="onCancel()" [multiple]="true" accept="image/*"
           [disabled]="isFileUploaded"
         >
           </p-fileUpload>
           <div class="text-center">
-            <p-button icon="pi pi-check" label="Valider" (click)="onUpload()" severity="info"></p-button>
+            <p-button icon="pi pi-check" label="Modifier" (click)="onUploadUpdate()" severity="info"></p-button>
           </div>
           <br>
         

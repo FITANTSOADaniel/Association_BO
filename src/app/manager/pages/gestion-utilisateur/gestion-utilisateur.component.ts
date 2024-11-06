@@ -22,7 +22,7 @@ export class GestionServicesComponent implements OnInit {
   checkDetailsUsers: boolean = false;
 
   keyWord : string="";
-  dataNumberShow: number= 3;
+  dataNumberShow: number= 10;
   offset:number=0;
   limit:number= this.dataNumberShow;
   currentPage=1;
@@ -79,8 +79,6 @@ export class GestionServicesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
-  
     this.environments = environment;
     this.getAllUsers();
     this.showAssociation()
@@ -100,6 +98,8 @@ export class GestionServicesComponent implements OnInit {
     this.serviceService.getAllAssociations().subscribe(
       (reponse: any) =>{
         this.associations = reponse.associations
+        console.log(this.associations);
+        
       }
     )
   }

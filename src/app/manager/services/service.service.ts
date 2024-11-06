@@ -143,6 +143,10 @@ export class ServiceService {
   registerAssociation(data: any){
     return this.http.post<any>(`${environment.url}/api/association`, data);
   }
+
+  updateAssociation(data: any){
+    return this.http.post<any>(`${environment.url}/api/updateAssoc`, data);
+  }
   registerUser(data: any) {
     return this.http.post<any>(`${environment.url}/api/register`, data);
   }

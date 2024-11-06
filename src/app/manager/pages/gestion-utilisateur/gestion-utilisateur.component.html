@@ -127,15 +127,6 @@
         </div>
       </div>
       <div>
-        <h5>Email</h5>
-        <input type="email" pInputText [(ngModel)]="detailUser.email" placeholder="exemple@gmail.com">
-        <h5>association</h5>
-        <p-dropdown 
-        [options]="associations" 
-        [(ngModel)]="userBody.association_id" 
-        optionLabel="name"
-        optionValue="id"
-        placeholder="Choisir une association" />
         <h5>Niveau</h5>
         <p-dropdown 
         [options]="niveaux" 
@@ -143,12 +134,17 @@
         optionLabel="description"
         optionValue="id"
         placeholder="Choisir un niveau" />
+        <h5>association</h5>
+        <p-dropdown 
+        [options]="associations" 
+        [(ngModel)]="userBody.association_id" 
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Choisir une association" />
+        <h5>Email</h5>
+        <input type="email" pInputText [(ngModel)]="detailUser.email" placeholder="exemple@gmail.com">
       </div>
       <br>
-      <div class="text-center">
-        <h5>Activer / Desactiver</h5>
-        <p-inputSwitch [ngModel]="checked" (ngModelChange)="oneCheckValid($event)"></p-inputSwitch>
-      </div>
     </div>
   </ng-template>
   <ng-template pTemplate="footer">
@@ -171,10 +167,6 @@
         </div>
       </div>
       <div>
-        <h5>Mot de passe</h5>
-        <input type="password" pInputText [(ngModel)]="userBody.password" placeholder="mot de passe">
-        <h5>Email</h5>
-        <input type="email" pInputText [(ngModel)]="userBody.email" placeholder="exemple@gmail.com">
         <h5>association</h5>
         <p-dropdown 
         [options]="associations"
@@ -182,6 +174,10 @@
         optionLabel="name"
         optionValue="id"
         placeholder="Choisir une association" />
+        <h5>Mot de passe</h5>
+        <input type="password" pInputText [(ngModel)]="userBody.password" placeholder="mot de passe">
+        <h5>Email</h5>
+        <input type="email" pInputText [(ngModel)]="userBody.email" placeholder="exemple@gmail.com">
       </div>
       <br>
     </div>
