@@ -1,50 +1,69 @@
 <style>
   .rounded-image {
-      border-radius: 50%; /* Arrondir à 50% pour obtenir un cercle */
-      object-fit: cover; /* Redimensionne l'image pour remplir le conteneur sans déformation */
+    border-radius: 50%; /* Arrondir à 50% pour obtenir un cercle */
+    object-fit: cover; /* Redimensionne l'image pour remplir le conteneur sans déformation */
   }
 </style>
 <div class="grid p-fluid">
- 
   <div class="col-12">
     <div class="card">
       <h5 class="title">Liste des associations</h5>
-      <br>
+      <br />
       <div class="container">
         <div class="title">
           <app-search
-          (searchs)="searchAssociations($event)"
-          [keyword]="keyWord"
+            (searchs)="searchAssociations($event)"
+            [keyword]="keyWord"
           ></app-search>
         </div>
-        <p-button label="Ajouter" icon="pi pi-plus" severity="success" (click)="showModalCreateUser()"></p-button>
+        <p-button
+          label="Ajouter"
+          icon="pi pi-plus"
+          severity="success"
+          (click)="showModalCreateUser()"
+        ></p-button>
       </div>
-      <br>
+      <br />
       <p-toast></p-toast>
       <p-confirmDialog key="positionDialog"></p-confirmDialog>
-      <ngx-spinner [name]="'spinnerLoader'" bdColor="rgb(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box"
-      [fullScreen]="true">
-      <p style="color: white"> Chargement... </p>
-    </ngx-spinner>
-      <p-table [value]="associations" dataKey="" [expandedRowKeys]="expandedRows" responsiveLayout="scroll">
+      <ngx-spinner
+        [name]="'spinnerLoader'"
+        bdColor="rgb(0, 0, 0, 0.8)"
+        size="medium"
+        color="#fff"
+        type="square-jelly-box"
+        [fullScreen]="true"
+      >
+        <p style="color: white">Chargement...</p>
+      </ngx-spinner>
+      <p-table
+        [value]="associations"
+        dataKey=""
+        [expandedRowKeys]="expandedRows"
+        responsiveLayout="scroll"
+      >
         <ng-template pTemplate="header">
           <tr>
-            <th style="width: 15%;">Nom</th> 
-            <th style="width: 15%;">Logo</th>
-            <th style="width: 7%;">Action</th>
+            <th style="width: 15%">Nom</th>
+            <th style="width: 15%">Logo</th>
+            <th style="width: 7%">Action</th>
             <!-- <th style="width: 3%;">Status</th>  
             <th style="width: 7%;">Lien</th>
             <th style="width: 7%;"></th> -->
-             
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-association let-expanded="expanded">
           <tr>
-          
-            <td> {{ association.name }}</td>
+            <td>{{ association.name }}</td>
             <td>
-              <img [src]="this.pathUrl+association.logo" width="50" height="50" alt="logo" class="rounded-image"> 
-            <!-- <td> <a  href="#" (click)="openUrl($event,association.path)"><img  [src]="this.pathUrl+association.path" width="120" height="75" alt="image"></a> </td>
+              <img
+                [src]="this.pathUrl + association.logo"
+                width="50"
+                height="50"
+                alt="logo"
+                class="rounded-image"
+              />
+              <!-- <td> <a  href="#" (click)="openUrl($event,association.path)"><img  [src]="this.pathUrl+association.path" width="120" height="75" alt="image"></a> </td>
             <td (click)="navigateContrat(user.id,user.first_name)">
               <i class="pi" [ngClass]="{
                 'text-green-500 pi-check-circle': association.is_active === 1,
@@ -53,131 +72,148 @@
             </td> 
             <td><a href="#" (click)="openLink($event,pub.link)">{{ pub.link | truncate:30 }}</a></td>
  -->
+            </td>
+
             <td>
               <div class="flex">
-                <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2"
-                  (click)="getDetailsAssoc(association.id)"></button>
-                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                  (click)="deletePublicitie(association.id, $event)"></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-eye"
+                  class="mr-2 p-button-rounded p-button-info"
+                  (click)="getDetailsAssoc(association.id)"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger"
+                  (click)="deletePublicitie(association.id, $event)"
+                ></button>
               </div>
             </td>
           </tr>
         </ng-template>
-    </p-table>
-    <br>
-    <app-pagination *ngIf="associations.length"
-    [dataNumberShow]="dataNumberShow"
-    [offset]="offset"
-    [limit]="limit"
-    [currentPage]="currentPage"
-    [totalPages]="totalPages"
-    (changePage)="changePage($event)"
-    (getPageNumbers)="getPageNumbers()"
-    >
-  
-    </app-pagination>
-    <div class="border-round border-1 surface-border p-4" *ngIf="skeleton">
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
+      </p-table>
+      <br />
+      <app-pagination
+        *ngIf="associations.length"
+        [dataNumberShow]="dataNumberShow"
+        [offset]="offset"
+        [limit]="limit"
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        (changePage)="changePage($event)"
+        (getPageNumbers)="getPageNumbers()"
+      >
+      </app-pagination>
+      <div class="p-4 border-round border-1 surface-border" *ngIf="skeleton">
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<p-dialog [(visible)]="checkDetails" header="A propos de {{detailAssoc.name}}" [modal]="true"
-  [style]="{width:'40%'}" position="top">
-  <ng-template pTemplate="content">
-    <div class="col-12 md:col-12">
-    
-      <div>
-        <h5>Nom de l'association</h5>
-        <input type="text" pInputText [(ngModel)]="detailAssoc.name" >
-        <h5>Description de l'association</h5>
-        <input type="text" pInputText [(ngModel)]="detailAssoc.desc" >
-       
-          <br>
-          <br>
-          <br>
-          <!-- <p-fileUpload [showUploadButton]="false" cancelLabel="Annuler" chooseLabel="Choisir un fichier" name="demo[]"
-          (onSelect)="getFileUpload($event)" (onUpload)="onUpload()" (onClear)="onCancel()" [multiple]="true" accept="image/*"
-          [disabled]="isFileUploaded"
-           >
-            <ng-template let-mail pTemplate="file"></ng-template>
-            <ng-template pTemplate="content">
-              <div class="grid" *ngFor="let file of f">
-                <div class="col-1"></div>
-                <div class="col-9">
-                    <li>{{ file.name }} - {{ file.size }} bytes</li>
-                </div>
-                <div class="col-2">
-                  <i class="pi pi-times" (click)="removeFile(file)"></i>
-                </div>
-              </div>
-              <div class="text-center"> 
-                <a  href="#" (click)="openUrl($event,detailPub.path)"><img  [src]="this.pathUrl+detailPub.path" width="120" height="75" alt="image"></a>
-              </div>
-              <br>
-            
-              <div class="text-center">
-                <h5>Valider / Desactiver</h5>
-                <p-inputSwitch [ngModel]="checked" (ngModelChange)="oneCheckValidUpdate($event)"></p-inputSwitch> 
-              </div>
-              <br>
-              <div class="text-center">
-                <p-button icon="pi pi-check" label="Modifier" (click)="onUploadUpdate()" severity="info"></p-button>
-              </div>
-            </ng-template>
-          </p-fileUpload> -->
-          <p-fileUpload [showUploadButton]="false" cancelLabel="Annuler" chooseLabel="Choisir un fichier" name="demo[]"
-          (onSelect)="getFileUpload($event)" (onUpload)="onUpload()" (onClear)="onCancel()" [multiple]="true" accept="image/*"
-          [disabled]="isFileUploaded"
-        >
-          </p-fileUpload>
-          <div class="text-center">
-            <p-button icon="pi pi-check" label="Modifier" (click)="onUploadUpdate()" severity="info"></p-button>
+  <p-dialog
+    [(visible)]="checkDetails"
+    header="A propos de {{ detailAssoc.name }}"
+    [modal]="true"
+    [style]="{ width: '40%' }"
+    position="top"
+  >
+    <ng-template pTemplate="content">
+      <div class="col-12 md:col-12">
+        <div>
+          <h5>Nom de l'association</h5>
+          <input type="text" pInputText [(ngModel)]="detailAssoc.name" />
+          <h5>Description de l'association</h5>
+          <input type="text" pInputText [(ngModel)]="detailAssoc.desc" />
+
+          <br />
+          <br />
+          <br />
+          <div *ngIf="detailAssoc.logo" class="preview-container">
+            <div *ngIf="!showupload">
+              <h5>Logo actuel</h5>
+              <img
+                [src]="this.pathUrl + detailAssoc.logo"
+                alt="Logo"
+                style="max-width: 150px; max-height: 150px; margin-bottom: 10px"
+              />
+            </div>
           </div>
-          <br>
-        
+          <p-button
+            [label]="buttonLabel"
+            [outlined]="true"
+            (click)="afficher()"
+          />
+          <p-fileUpload
+            *ngIf="showupload"
+            [showUploadButton]="false"
+            cancelLabel="Annuler"
+            chooseLabel="Choisir un fichier"
+            name="demo[]"
+            (onSelect)="getFileUpload($event)"
+            (onUpload)="onUpload()"
+            (onClear)="onCancel()"
+            [multiple]="true"
+            accept="image/*"
+            [disabled]="isFileUploaded"
+          >
+          </p-fileUpload>
+          <div class="text-center" style="margin: 10px">
+            <p-button
+              icon="pi pi-check"
+              label="Modifier"
+              (click)="onUploadUpdate()"
+              severity="info"
+            ></p-button>
+          </div>
+          <br />
+        </div>
+        <br />
       </div>
-      <br>
-    </div>
-  </ng-template>
-  <ng-template pTemplate="footer">
-    
-  </ng-template>
-</p-dialog>
+    </ng-template>
+    <ng-template pTemplate="footer"> </ng-template>
+  </p-dialog>
 
-<p-dialog [(visible)]="modalCreateUser" header="Nouvelle association" [modal]="true" [style]="{width:'40%'}" position="top">
-  <ng-template pTemplate="content">
-    <div class="col-12 md:col-12">
-    
-      <div>
-        <h5>Nom de l'association</h5>
-        <input type="text" pInputText [(ngModel)]="detailAssoc.name" >
-        <h5>desc</h5>
-        <input type="text" pInputText [(ngModel)]="detailAssoc.desc" >
-       
-          <br>
-          <br>
-          <br>
+  <p-dialog
+    [(visible)]="modalCreateUser"
+    header="Nouvelle association"
+    [modal]="true"
+    [style]="{ width: '40%' }"
+    position="top"
+  >
+    <ng-template pTemplate="content">
+      <div class="col-12 md:col-12">
+        <div>
+          <h5>Nom de l'association</h5>
+          <input type="text" pInputText [(ngModel)]="detailAssoc.name" />
+          <h5>desc</h5>
+          <input type="text" pInputText [(ngModel)]="detailAssoc.desc" />
+
+          <br />
+          <br />
+          <br />
           <!-- <p-fileUpload [showUploadButton]="false" cancelLabel="Annuler" chooseLabel="Choisir un fichier" name="demo[]"
           (onSelect)="getFileUpload($event)" (onUpload)="onUpload()" (onClear)="onCancel()" [multiple]="true" accept="image/*"
           [disabled]="isFileUploaded"
@@ -204,21 +240,32 @@
               </div>
             </ng-template>
           </p-fileUpload> -->
-          <p-fileUpload [showUploadButton]="false" cancelLabel="Annuler" chooseLabel="Choisir un fichier" name="demo[]"
-          (onSelect)="getFileUpload($event)" (onUpload)="onUpload()" (onClear)="onCancel()" [multiple]="true" accept="image/*"
-          [disabled]="isFileUploaded">
+          <p-fileUpload
+            [showUploadButton]="false"
+            cancelLabel="Annuler"
+            chooseLabel="Choisir un fichier"
+            name="demo[]"
+            (onSelect)="getFileUpload($event)"
+            (onUpload)="onUpload()"
+            (onClear)="onCancel()"
+            [multiple]="true"
+            accept="image/*"
+            [disabled]="isFileUploaded"
+          >
           </p-fileUpload>
-          <br>
+          <br />
           <div class="text-center">
-            <p-button icon="pi pi-check" label="Valider" (click)="onUpload()" severity="info"></p-button>
+            <p-button
+              icon="pi pi-check"
+              label="Valider"
+              (click)="onUpload()"
+              severity="info"
+            ></p-button>
           </div>
-        
+        </div>
+        <br />
       </div>
-      <br>
-    </div>
-  </ng-template>
-  <ng-template pTemplate="footer">
-    
-  </ng-template>
-</p-dialog>
-
+    </ng-template>
+    <ng-template pTemplate="footer"> </ng-template>
+  </p-dialog>
+</div>

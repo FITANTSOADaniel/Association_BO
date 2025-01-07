@@ -21,14 +21,14 @@ export class GestionAdministrateurComponent implements OnInit {
   skeleton: boolean = true;
   checkDetailsUsers: boolean = false;
 
-  keyWord : string="";
-  dataNumberShow: number= 10;
-  offset:number=0;
-  limit:number= this.dataNumberShow;
-  currentPage=1;
-  totalPages=0;
-  selected: any[]=[]
-  visible:boolean = false
+  keyWord: string = "";
+  dataNumberShow: number = 10;
+  offset: number = 0;
+  limit: number = this.dataNumberShow;
+  currentPage = 1;
+  totalPages = 0;
+  selected: any[] = [];
+  visible: boolean = false;
 
   users: any[] = [];
   detailUser = {
@@ -64,7 +64,7 @@ export class GestionAdministrateurComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private datePipe: DatePipe,
     private router: Router,
-    private statusService : AlertService
+    private statusService: AlertService
   ) {}
 
   ngOnInit() {
@@ -101,28 +101,26 @@ export class GestionAdministrateurComponent implements OnInit {
     this.checked = foundItem.status;
   }
 
-  searchOrders(key)
-  {
-      this.keyWord=key;
-      this.offset=0;
-      this.limit= this.dataNumberShow;
-      this.getAllOrders();
-      this.currentPage = 1
+  searchOrders(key) {
+    this.keyWord = key;
+    this.offset = 0;
+    this.limit = this.dataNumberShow;
+    this.getAllOrders();
+    this.currentPage = 1;
   }
 
   getPageNumbers(): void {
     const pageCount = Math.ceil(this.totalPages / this.dataNumberShow);
-    this.totalPages=pageCount;
+    this.totalPages = pageCount;
   }
 
   changePage(newPage: any) {
     if (newPage >= 1 && newPage <= this.totalPages) {
+      this.currentPage = newPage;
+      this.offset = this.dataNumberShow * (newPage - 1);
+      this.limit = this.dataNumberShow;
 
-      this.currentPage=newPage;
-      this.offset=(this.dataNumberShow*(newPage-1));
-      this.limit= this.dataNumberShow;
-
-    this.getAllOrders();
+      this.getAllOrders();
     }
   }
 
@@ -130,19 +128,24 @@ export class GestionAdministrateurComponent implements OnInit {
     const body = {
       key: this.keyWord,
       offset: this.offset,
-      limit: this.limit
-    }
-    
-    this.serviceService.getAllOrders(body).subscribe((data: any) => {
-      this.users = data.users;
-      this.totalPages=data.userCount;
-      this.getPageNumbers();
-      this.skeleton = false;
-    },
-    (error) => {
-      let status = this.statusService.getStatus();
-      this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-    }
+      limit: this.limit,
+    };
+
+    this.serviceService.getAllOrders(body).subscribe(
+      (data: any) => {
+        this.users = data.users;
+        this.totalPages = data.userCount;
+        this.getPageNumbers();
+        this.skeleton = false;
+      },
+      (error) => {
+        let status = this.statusService.getStatus();
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: status,
+        });
+      }
     );
   }
 
@@ -151,50 +154,56 @@ export class GestionAdministrateurComponent implements OnInit {
       const exists = this.selected.some((u: any) => u.id === user.id);
       if (!exists) {
         this.selected.push(user);
+        console.log(this.selected);
       }
     } else {
       this.selected = this.selected.filter((u: any) => u.id !== user.id);
     }
   }
 
-  accept(user: any){
-    this.serviceService.accept(user).subscribe(
-      (data : any) =>{
-      },
-      (error) =>{
-        let status = this.statusService.getStatus();
-        this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-      }
-    )
-  }
-  
-  valider(){
-    if(this.selected.length === 0){
-      this.messageService.add({severity: 'info', summary:'Info', detail: 'Selectionnée avant d\'accepter'})
-      return
-    }else{
+  valider() {
     this.spinner.show("spinnerLoader");
-    if(this.selected.length !== 0){
-      for(let i=0; i<this.selected.length; i++){
-        this.accept(this.selected[i])
-      }
-      this.spinner.hide("spinnerLoader");
-      this.getAllOrders();
+    if (this.selected.length !== 0) {
+      const userIds = this.selected.map((user) => user.id);
+
+      this.serviceService.acceptUsers(userIds).subscribe(
+        (response: any) => {
+          this.messageService.add({
+            severity: "success",
+            summary: "Succès",
+            detail: "Utilisateurs acceptés avec succès.",
+          });
+          this.spinner.hide("spinnerLoader");
+          this.getAllOrders();
+        },
+        (error) => {
+          this.spinner.hide("spinnerLoader");
+          let status = this.statusService.getStatus();
+          this.messageService.add({
+            severity: "error",
+            summary: "Erreur",
+            detail: status,
+          });
+        }
+      );
     }
-    this.visible = true
-  }
   }
 
   getDEtailsUsers(id: any) {
     this.checkDetailsUsers = true;
-    this.serviceService.getDetailsUsers(id).subscribe((data: any) => {
-      this.detailUser = data.user;
-      this.oneCheckValid(this.detailUser.is_valid);
-    },
-    (error)=>{
-      let status = this.statusService.getStatus();
-      this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-    }
+    this.serviceService.getDetailsUsers(id).subscribe(
+      (data: any) => {
+        this.detailUser = data.user;
+        this.oneCheckValid(this.detailUser.is_valid);
+      },
+      (error) => {
+        let status = this.statusService.getStatus();
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: status,
+        });
+      }
     );
   }
 
@@ -208,46 +217,54 @@ export class GestionAdministrateurComponent implements OnInit {
       rejectButtonStyleClass: "p-button-text p-button-text",
       acceptIcon: "none",
       rejectIcon: "none",
-      acceptLabel: "Oui", 
-      rejectLabel: "Non", 
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
 
       accept: () => {
         this.spinner.show("spinnerLoader");
-        this.serviceService.deleteUsers(id).subscribe(() => {
-          this.messageService.add({
-            severity: "info",
-            summary: "Confirmé",
-            detail: "Administrateur supprimé",
-          });
-          this.getAllOrders();
-          this.spinner.hide("spinnerLoader");
-        },
-        (error)=>{
-          let status = this.statusService.getStatus();
-          this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-        }
+        this.serviceService.deleteUsers(id).subscribe(
+          () => {
+            this.messageService.add({
+              severity: "info",
+              summary: "Confirmé",
+              detail: "Administrateur supprimé",
+            });
+            this.getAllOrders();
+            this.spinner.hide("spinnerLoader");
+          },
+          (error) => {
+            let status = this.statusService.getStatus();
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: status,
+            });
+          }
         );
       },
-      reject: () => {
-
-      },
+      reject: () => {},
     });
   }
 
   updateUser() {
     this.disableUpdate = true;
     this.spinner.show("spinnerLoader");
-    this.serviceService.updateUser(this.detailUser).subscribe(() => {
-      this.getAllOrders();
-      this.checkDetailsUsers = false;
-      this.disableUpdate = false;
-      this.spinner.hide("spinnerLoader");
-    },
-    (error)=>{
-      let status = this.statusService.getStatus();
-      this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-      this.spinner.hide("spinnerLoader");
-    }
+    this.serviceService.updateUser(this.detailUser).subscribe(
+      () => {
+        this.getAllOrders();
+        this.checkDetailsUsers = false;
+        this.disableUpdate = false;
+        this.spinner.hide("spinnerLoader");
+      },
+      (error) => {
+        let status = this.statusService.getStatus();
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: status,
+        });
+        this.spinner.hide("spinnerLoader");
+      }
     );
   }
 

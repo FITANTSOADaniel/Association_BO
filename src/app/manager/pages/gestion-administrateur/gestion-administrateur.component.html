@@ -1,50 +1,74 @@
 <div class="grid p-fluid">
- 
   <div class="col-12">
     <div class="card">
       <h5 class="title">Liste des demandes</h5>
-      <br>
+      <br />
       <div class="container">
         <div class="title">
           <app-search
-          (searchs)="searchOrders($event)"
-          [keyword]="keyWord"
+            (searchs)="searchOrders($event)"
+            [keyword]="keyWord"
           ></app-search>
         </div>
-        <p-button label="Accepter" icon="pi pi-plus" severity="success" (click)="valider()"></p-button>
+        <div style="display: flex">
+          <p-button
+            style="margin: 5px"
+            [disabled]="selected.length === 0"
+            label="Accepter"
+            icon="pi pi-check"
+            severity="success"
+            (click)="valider()"
+          ></p-button>
+        </div>
       </div>
-      <br>
+      <br />
       <p-toast></p-toast>
       <p-confirmDialog key="positionDialog"></p-confirmDialog>
-      <ngx-spinner [name]="'spinnerLoader'" bdColor="rgb(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box"
-      [fullScreen]="true">
-      <p style="color: white"> Chargement... </p>
-    </ngx-spinner>
-      <p-table [value]="users" dataKey="first_name" [expandedRowKeys]="expandedRows" responsiveLayout="scroll">
+      <ngx-spinner
+        [name]="'spinnerLoader'"
+        bdColor="rgb(0, 0, 0, 0.8)"
+        size="medium"
+        color="#fff"
+        type="square-jelly-box"
+        [fullScreen]="true"
+      >
+        <p style="color: white">Chargement...</p>
+      </ngx-spinner>
+      <p-table
+        [value]="users"
+        dataKey="first_name"
+        [expandedRowKeys]="expandedRows"
+        responsiveLayout="scroll"
+      >
         <ng-template pTemplate="header">
           <tr>
-            <th style="width: 5%;"></th>
-            <th style="width: 22%;">Nom</th>
-            <th style="width: 19%;">Prénom(s)</th>
-            <th style="width: 20%;">Email</th>
-            <th style="width: 7%;"></th>
+            <th style="width: 5%"></th>
+            <th style="width: 22%">Nom</th>
+            <th style="width: 19%">Prénom(s)</th>
+            <th style="width: 20%">Email</th>
+            <th style="width: 7%"></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user let-expanded="expanded">
           <tr>
             <td></td>
-            <td style="min-width: 12rem;">{{user.last_name}}</td>
-            <td>{{user.first_name}}</td>
-            <td style="min-width: 8rem;">{{user.email}}</td>
-              
+            <td style="min-width: 12rem">{{ user.last_name }}</td>
+            <td>{{ user.first_name }}</td>
+            <td style="min-width: 8rem">{{ user.email }}</td>
+
             <td>
               <!-- <div class="flex">
-                <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2"
+                <button pButton pRipple icon="pi pi-eye" class="mr-2 p-button-rounded p-button-info"
                   (click)="getDEtailsUsers(user.id)"></button>
                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
                   (click)="deleteUser(user.id, $event)"></button>
               </div> -->
-              <p-inputSwitch (onChange)="selectUser($event, user)"/>
+              <!-- <p-inputSwitch (onChange)="selectUser($event, user)" /> -->
+              <p-checkbox
+                [binary]="true"
+                inputId="binary"
+                (onChange)="selectUser($event, user)"
+              />
             </td>
           </tr>
         </ng-template>
@@ -69,50 +93,50 @@
     </td>
     </tr>
     </ng-template> -->
-    </p-table>
-    <br>
-    <app-pagination *ngIf="users.length"
-    [dataNumberShow]="dataNumberShow"
-    [offset]="offset"
-    [limit]="limit"
-    [currentPage]="currentPage"
-    [totalPages]="totalPages"
-    (changePage)="changePage($event)"
-    (getPageNumbers)="getPageNumbers()"
-    >
-  
-    </app-pagination>
-    <div class="border-round border-1 surface-border p-4" *ngIf="skeleton">
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
+      </p-table>
+      <br />
+      <app-pagination
+        *ngIf="users.length"
+        [dataNumberShow]="dataNumberShow"
+        [offset]="offset"
+        [limit]="limit"
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        (changePage)="changePage($event)"
+        (getPageNumbers)="getPageNumbers()"
+      >
+      </app-pagination>
+      <div class="p-4 border-round border-1 surface-border" *ngIf="skeleton">
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- <p-dialog [(visible)]="checkDetailsUsers" header="A propos de {{detailUser.first_name}}" [modal]="true"
+  <!-- <p-dialog [(visible)]="checkDetailsUsers" header="A propos de {{detailUser.first_name}}" [modal]="true"
   [style]="{width:'40%'}" position="top">
   <ng-template pTemplate="content">
     <div class="col-12 md:col-12">
-      <div class="p-formgrid grid">
+      <div class="grid p-formgrid">
         <div class="field col">
           <h5 htmlFor="Nom">Nom</h5>
           <input pInputText id="Nom" type="text" [(ngModel)]="detailUser.first_name" />
@@ -138,17 +162,17 @@
   </ng-template>
 </p-dialog> -->
 
-<div class="flex justify-content-center">
-  <p-dialog 
-      header="Notification" 
-      [(visible)]="visible" 
-      [modal]="true" 
-      [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
-      [style]="{ width: '30vw' }" 
-      [draggable]="false" 
-      [resizable]="false">
-          <h6>
-              Compte(s) activé(s) avec succès
-          </h6>
-  </p-dialog>
+  <div class="flex justify-content-center">
+    <p-dialog
+      header="Notification"
+      [(visible)]="visible"
+      [modal]="true"
+      [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+      [style]="{ width: '30vw' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <h6>Compte(s) activé(s) avec succès</h6>
+    </p-dialog>
+  </div>
 </div>

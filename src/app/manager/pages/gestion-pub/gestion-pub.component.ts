@@ -26,28 +26,29 @@ export class GestionPubComponent implements OnInit {
   checkDetails: boolean = false;
   ajouterDoc: boolean = false;
   pathUrl: string;
-  url : string;
-  isFileUploaded:boolean=false;
+  url: string;
+  isFileUploaded: boolean = false;
 
-  keyWord : string="";
-  dataNumberShow: number= 10;
-  offset:number=0;
-  limit:number= this.dataNumberShow;
-  currentPage=1;
-  totalPages=0;
+  keyWord: string = "";
+  dataNumberShow: number = 10;
+  offset: number = 0;
+  limit: number = this.dataNumberShow;
+  currentPage = 1;
+  totalPages = 0;
   f: any[] = [];
 
   associations: any[] = [];
+  showupload: boolean = false;
   detailAssoc = {
     id: 0,
     name: "",
-    desc: ""
-  }
+    desc: "",
+  };
   detailPub = {
-    id:0,
+    id: 0,
     titre: "",
     link: "",
-    is_active: 0, 
+    is_active: 0,
   };
   selectedFile: File | null = null;
   isAdmin = [
@@ -66,12 +67,12 @@ export class GestionPubComponent implements OnInit {
   disableUpdate: boolean = false;
   pubBody = {
     titre: "",
-    link: "", 
-    is_active:0
+    link: "",
+    is_active: 0,
   };
   modalCreateUser: boolean = false;
   addContrat: boolean = false;
- 
+
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
@@ -79,10 +80,10 @@ export class GestionPubComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private datePipe: DatePipe,
     private router: Router,
-    private statusService : AlertService
+    private statusService: AlertService
   ) {
     this.pathUrl = environment.PATH_URL;
-    this.url = "http://localhost:8000/api/upload_logo"
+    this.url = "http://localhost:8000/api/upload_logo";
   }
 
   ngOnInit() {
@@ -91,14 +92,14 @@ export class GestionPubComponent implements OnInit {
   }
   uploadFiles() {
     if (this.selectedFile) {
-      console.log('Uploading file:', this.selectedFile)
-      this.serviceService.upload_logo(this.detailAssoc).subscribe(
-        (data: any) => {
-          console.log(data)
-        }
-      )
+      console.log("Uploading file:", this.selectedFile);
+      this.serviceService
+        .upload_logo(this.detailAssoc)
+        .subscribe((data: any) => {
+          console.log(data);
+        });
     } else {
-      console.log('Aucun fichier sélectionné pour l’upload');
+      console.log("Aucun fichier sélectionné pour l’upload");
     }
   }
 
@@ -110,197 +111,131 @@ export class GestionPubComponent implements OnInit {
   isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
-}
+  }
 
-openUrl(event: MouseEvent,url: string) {
-  event.preventDefault(); 
-  if(url=="path")
-    {
+  openUrl(event: MouseEvent, url: string) {
+    event.preventDefault();
+    if (url == "path") {
       this.messageService.add({
         severity: "error",
-            summary: "",
-            detail: "Cette publicité n'a pas d'image",
+        summary: "",
+        detail: "Cette publicité n'a pas d'image",
       });
       return;
     }
-   window.open(this.pathUrl + url, "_blank");
-}
-openLink(event: MouseEvent,url: string)
-{
-  window.open(url, "_blank");
-}
-getFileUpload(event:UploadEvent) {
-  if(event.files.length>1){
-    this.messageService.add({
-      severity: "error",
-          summary: "",
-          detail: "Vous ne pouvez sélectionner qu'un seul fichier.",
-    });
-    this.f = [];
-    return;
+    window.open(this.pathUrl + url, "_blank");
   }
-  for(let file of event.files) {
-      this.f.push(file);
+  openLink(event: MouseEvent, url: string) {
+    window.open(url, "_blank");
   }
- this.setFileDisabled();
-} 
-onCancel(){
-  this.f = [];
-  this.setFileDisabled();
-}
-removeFile(file: any) {
-  const index = this.f.indexOf(file);
-  if (index !== -1) {
-    this.f.splice(index, 1);
-  }
-  this.setFileDisabled();
-}
-setFileDisabled(){
-  if(this.f.length>=1){
-    this.isFileUploaded=true;
-  }else{
-    this.isFileUploaded=false;
-  } 
-}
-getDetailsPub(id: any) {
-  this.checkDetails = true;
-  this.serviceService.getDetailsPub(id).subscribe((data: any) => {
-    this.detailPub = data.pub;
-    this.checked = this.detailPub.is_active=== 1;
-  });
-}
-
-getDetailsAssoc(id: any) {
-  this.checkDetails = true
-  this.serviceService.getDetailsAssoc(id).subscribe(
-    (data: any ) => {
-      this.detailAssoc = data.associations[0]
+  getFileUpload(event: UploadEvent) {
+    if (event.files.length > 1) {
+      this.messageService.add({
+        severity: "error",
+        summary: "",
+        detail: "Vous ne pouvez sélectionner qu'un seul fichier.",
+      });
+      this.f = [];
+      return;
     }
-  )
-}
-getFilePath(file: string): string {
-  return file.includes("public/") ? file.split("public/")[1] : file;
-}
-getFileType(file: string) {
-  return file.split(".")[1];
-}
-
-openModal(id: any) {
-  this.pubBody.titre = "";
-  this.pubBody.link = "";
-}
-isLink(link: string): boolean {
-  if(link==null){
-    return true
+    for (let file of event.files) {
+      this.f.push(file);
+    }
+    this.setFileDisabled();
   }
-  return link.startsWith('http://') || link.startsWith('https://');
-}
-getImageType(path:any)
-{
+  onCancel() {
+    this.f = [];
+    this.setFileDisabled();
+  }
+  removeFile(file: any) {
+    const index = this.f.indexOf(file);
+    if (index !== -1) {
+      this.f.splice(index, 1);
+    }
+    this.setFileDisabled();
+  }
+  setFileDisabled() {
+    if (this.f.length >= 1) {
+      this.isFileUploaded = true;
+    } else {
+      this.isFileUploaded = false;
+    }
+  }
+  getDetailsPub(id: any) {
+    this.checkDetails = true;
+    this.serviceService.getDetailsPub(id).subscribe((data: any) => {
+      this.detailPub = data.pub;
+      this.checked = this.detailPub.is_active === 1;
+    });
+  }
+
+  getDetailsAssoc(id: any) {
+    this.checkDetails = true;
+    this.serviceService.getDetailsAssoc(id).subscribe((data: any) => {
+      this.detailAssoc = data.associations[0];
+    });
+  }
+  getFilePath(file: string): string {
+    return file.includes("public/") ? file.split("public/")[1] : file;
+  }
+  getFileType(file: string) {
+    return file.split(".")[1];
+  }
+
+  openModal(id: any) {
+    this.pubBody.titre = "";
+    this.pubBody.link = "";
+  }
+  isLink(link: string): boolean {
+    if (link == null) {
+      return true;
+    }
+    return link.startsWith("http://") || link.startsWith("https://");
+  }
+  getImageType(path: any) {
     return path.split(".")[1];
-}
+  }
+  get buttonLabel(): string {
+    return this.showupload
+      ? "Annuler la modification du logo"
+      : "Modifier le logo";
+  }
+  afficher() {
+    this.showupload = !this.showupload;
+  }
 
-onUploadUpdate() {
-  if (this.detailAssoc.name === "" || this.detailAssoc.desc === "") {
-    this.messageService.add({
-      severity: "error",
-          summary: "",
-          detail: "Champ manquant",
-    });
-    return;
-  }
-  if (this.f.length ==0 || this.f.length>1) {
-    this.messageService.add({
-      severity: "error",
-          summary: "",
-          detail: "Mettre une image",
-    });
-    return;
-  }
-  // if(this.f.length>1){
-  //   this.messageService.add({
-  //     severity: "error",
-  //         summary: "",
-  //         detail: "Mettre une image",
-  //   });
-  //   return;
-  // }else if (this.f.length ==0) { 
-  //   this.disableUpdate = true;
-  //   this.spinner.show("spinnerLoader");
-  //   this.serviceService.updatePublicity(this.detailPub).subscribe(() => {
-  //     this.getAllAssociations();
-  //     this.f = [];
-  //     this.clearDetail();
-  //     this.checkDetails = false;
-  //     this.disableUpdate = false;
-  //     this.messageService.add({
-  //       severity: "success",
-  //       summary: "Publicité modifiée avec succès",
-  //       detail: "",
-  //     });
-  //     this.spinner.hide("spinnerLoader");
-  //   },
-  //   (error) => {
-  //     let status = this.statusService.getStatus();
-  //     this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-  //     this.spinner.hide("spinnerLoader");
-  //     return;
-  //   }
-  //   );
-  // }else if (this.f.length ==1) { 
-  //   const uploadData = new FormData();
-  //   for (let i = 0; i < this.f.length; i++) {
-  //     uploadData.append("fichier[]", this.f[i], this.f[i].name);
-  //   }
-  
-  //   this.spinner.show("spinnerLoader");
-  //   this.serviceService.upload(uploadData).subscribe(
-  //     (data) => {
-  //       if (data.message === "success") {
-  //         for (let index = 0; index < data.paths.length; index++) {
-  //           var body = {
-  //             id:this.detailPub.id,
-  //             titre: this.detailPub.titre,
-  //             path: this.getFilePath(data.paths[index]),
-  //             link: this.detailPub.link, 
-  //             type: this.getImageType(this.getFilePath(data.paths[index])),
-  //             is_active:this.detailPub.is_active
-  //           };
-  
-  //           this.serviceService.updatePublicity(body).subscribe(() => {
-  //             this.getAllAssociations();
-  //             this.f = [];
-  //             this.clearDetail();
-  //             this.checkDetails = false;
-  //             this.disableUpdate = false;
-  //             this.messageService.add({
-  //               severity: "success",
-  //               summary: "Publicité modifiée avec succès",
-  //               detail: "",
-  //             });
-  //             this.spinner.hide("spinnerLoader");
-  //           },
-  //           (error) => {
-  //             let status = this.statusService.getStatus();
-  //             this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-  //             this.spinner.hide("spinnerLoader");
-  //             return;
-  //           }
-  //           );
-  //         }
-  //       }
-  //     },
-  //     (error) => {
-  //       let status = this.statusService.getStatus();
-  //       this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-  //     }
-  //   );
-  // }
-  const uploadData = new FormData();
+  onUploadUpdate() {
+    if (this.detailAssoc.name === "" || this.detailAssoc.desc === "") {
+      this.messageService.add({
+        severity: "error",
+        summary: "",
+        detail: "Champ manquant",
+      });
+      return;
+    }
+    if (!this.showupload) {
+      this.spinner.show("spinnerLoader");
+      this.serviceService.updateAssociation(this.detailAssoc).subscribe(() => {
+        this.getAllAssociations();
+        this.clearDetail();
+        this.checkDetails = false;
+        this.spinner.hide("spinnerLoader");
+        this.messageService.add({
+          severity: "success",
+          summary: "Association modifiée avec succès",
+          detail: "",
+        });
+      });
+    }
+    if (!this.f || this.f.length === 0 || !this.showupload) {
+      return;
+    }
+
+    const uploadData = new FormData();
     for (let i = 0; i < this.f.length; i++) {
       uploadData.append("fichier[]", this.f[i], this.f[i].name);
     }
-  
+
     this.spinner.show("spinnerLoader");
     this.serviceService.upload(uploadData).subscribe(
       (data) => {
@@ -309,10 +244,9 @@ onUploadUpdate() {
             var body = {
               id: this.detailAssoc.id,
               name: this.detailAssoc.name,
-              desc:this.detailAssoc.desc,
-              logo: this.getFilePath(data.paths[index])
+              desc: this.detailAssoc.desc,
+              logo: this.getFilePath(data.paths[index]),
             };
-            // console.log(body);
             this.serviceService.updateAssociation(body).subscribe(
               () => {
                 this.getAllAssociations();
@@ -329,7 +263,11 @@ onUploadUpdate() {
               },
               (error) => {
                 let status = this.statusService.getStatus();
-                this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
+                this.messageService.add({
+                  severity: "error",
+                  summary: "Error",
+                  detail: status,
+                });
                 this.spinner.hide("spinnerLoader");
               }
             );
@@ -338,36 +276,40 @@ onUploadUpdate() {
       },
       (error) => {
         let status = this.statusService.getStatus();
-        this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: status,
+        });
       }
-    ); 
+    );
+    this.showupload = false;
+    this.checkDetails = false;
+  }
+  onUpload() {
+    if (this.detailAssoc.name === "" || this.detailAssoc.desc === "") {
+      this.messageService.add({
+        severity: "error",
+        summary: "",
+        detail: "Champ manquant",
+      });
+      return;
+    }
 
-  } 
-onUpload() {
-  if (this.detailAssoc.name === "" || this.detailAssoc.desc === "") {
-    this.messageService.add({
-      severity: "error",
-          summary: "",
-          detail: "Champ manquant",
-    });
-    return;
-  }
- 
- 
-  if (this.f.length ==0 || this.f.length>1) {
-    this.messageService.add({
-      severity: "error",
-          summary: "",
-          detail: "Mettre une image",
-    });
-    return;
-  }
-  
+    if (this.f.length == 0 || this.f.length > 1) {
+      this.messageService.add({
+        severity: "error",
+        summary: "",
+        detail: "Mettre une image",
+      });
+      return;
+    }
+
     const uploadData = new FormData();
     for (let i = 0; i < this.f.length; i++) {
       uploadData.append("fichier[]", this.f[i], this.f[i].name);
     }
-  
+
     this.spinner.show("spinnerLoader");
     this.serviceService.upload(uploadData).subscribe(
       (data) => {
@@ -375,8 +317,8 @@ onUpload() {
           for (let index = 0; index < data.paths.length; index++) {
             var body = {
               name: this.detailAssoc.name,
-              desc:this.detailAssoc.desc,
-              logo: this.getFilePath(data.paths[index])
+              desc: this.detailAssoc.desc,
+              logo: this.getFilePath(data.paths[index]),
             };
             this.serviceService.registerAssociation(body).subscribe(
               () => {
@@ -394,7 +336,11 @@ onUpload() {
               },
               (error) => {
                 let status = this.statusService.getStatus();
-                this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
+                this.messageService.add({
+                  severity: "error",
+                  summary: "Error",
+                  detail: status,
+                });
                 this.spinner.hide("spinnerLoader");
               }
             );
@@ -403,48 +349,50 @@ onUpload() {
       },
       (error) => {
         let status = this.statusService.getStatus();
-        this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: status,
+        });
       }
     );
-} 
+  }
 
   clearForm() {
     this.pubBody.titre = "";
     this.pubBody.link = "";
-    this.isFileUploaded=false;
-   this.pubBody.is_active = 0;
-   this.f = [];
+    this.isFileUploaded = false;
+    this.pubBody.is_active = 0;
+    this.f = [];
   }
 
   clearDetail() {
     this.detailPub.titre = "";
     this.detailPub.link = "";
-   this.detailPub.is_active = 0;
-   this.isFileUploaded=false;
+    this.detailPub.is_active = 0;
+    this.isFileUploaded = false;
   }
 
-  searchAssociations(key)
-  {
-      this.keyWord=key;
-      this.offset=0;
-      this.limit= this.dataNumberShow;
-      this.getAllAssociations();
-      this.currentPage = 1
+  searchAssociations(key) {
+    this.keyWord = key;
+    this.offset = 0;
+    this.limit = this.dataNumberShow;
+    this.getAllAssociations();
+    this.currentPage = 1;
   }
 
   getPageNumbers(): void {
     const pageCount = Math.ceil(this.totalPages / this.dataNumberShow);
-    this.totalPages=pageCount;
+    this.totalPages = pageCount;
   }
 
   changePage(newPage: any) {
     if (newPage >= 1 && newPage <= this.totalPages) {
+      this.currentPage = newPage;
+      this.offset = this.dataNumberShow * (newPage - 1);
+      this.limit = this.dataNumberShow;
 
-      this.currentPage=newPage;
-      this.offset=(this.dataNumberShow*(newPage-1));
-      this.limit= this.dataNumberShow;
-
-    this.getAllAssociations();
+      this.getAllAssociations();
     }
   }
 
@@ -452,25 +400,29 @@ onUpload() {
     const body = {
       key: this.keyWord,
       offset: this.offset,
-      limit: this.limit
-    }
-    
-    this.serviceService.getAssociations(body).subscribe((data: any) => {
-      this.associations = data.associations;
-      this.totalPages=data.associationCount;
-      this.getPageNumbers();
-      this.skeleton = false;
-    },
-    (error) => {
-      let status = this.statusService.getStatus();
-      this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-    }
+      limit: this.limit,
+    };
+
+    this.serviceService.getAssociations(body).subscribe(
+      (data: any) => {
+        this.associations = data.associations;
+        this.totalPages = data.associationCount;
+        this.getPageNumbers();
+        this.skeleton = false;
+      },
+      (error) => {
+        let status = this.statusService.getStatus();
+        this.messageService.add({
+          severity: "error",
+          summary: "Error",
+          detail: status,
+        });
+      }
     );
   }
   oneCheckValid(value: any) {
     if (value) {
       this.pubBody.is_active = 1;
-     
     } else {
       this.pubBody.is_active = 0;
     }
@@ -481,14 +433,13 @@ onUpload() {
   oneCheckValidUpdate(value: any) {
     if (value) {
       this.detailPub.is_active = 1;
-     
     } else {
       this.detailPub.is_active = 0;
     }
     const foundItem = this.isValidUpdate.find((item) => item.value === value);
     this.checked = foundItem.status;
   }
-  
+
   deletePublicitie(id: any, event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -499,29 +450,32 @@ onUpload() {
       rejectButtonStyleClass: "p-button-text p-button-text",
       acceptIcon: "none",
       rejectIcon: "none",
-      acceptLabel: "Oui", 
-      rejectLabel: "Non", 
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
 
       accept: () => {
         this.spinner.show("spinnerLoader");
-        this.serviceService.deleteAssociation(id).subscribe(() => {
-          this.messageService.add({
-            severity: "info",
-            summary: "Confirmé",
-            detail: "Association supprimée",
-          });
-          this.getAllAssociations();
-          this.spinner.hide("spinnerLoader");
-        },
-        (error)=>{
-          let status = this.statusService.getStatus();
-          this.messageService.add({ severity: 'error', summary: 'Error', detail:  status });
-        }
+        this.serviceService.deleteAssociation(id).subscribe(
+          () => {
+            this.messageService.add({
+              severity: "info",
+              summary: "Confirmé",
+              detail: "Association supprimée",
+            });
+            this.getAllAssociations();
+            this.spinner.hide("spinnerLoader");
+          },
+          (error) => {
+            let status = this.statusService.getStatus();
+            this.messageService.add({
+              severity: "error",
+              summary: "Error",
+              detail: status,
+            });
+          }
         );
       },
-      reject: () => {
-
-      },
+      reject: () => {},
     });
   }
 

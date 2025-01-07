@@ -28,16 +28,15 @@ export class MenuComponent implements OnInit {
         },
         {
           label: "Gestions des demandes",
-          icon: "pi pi-fw pi-shield",
+          icon: "pi pi-fw pi-hourglass",
           routerLink: ["/manager/demande"],
         },
         {
           label: "Gestions des associations",
           icon: "pi pi-fw pi-slack",
           routerLink: ["/manager/association"],
-        }
+        },
       ],
-      
     };
 
     this.typeMenu == "manager";

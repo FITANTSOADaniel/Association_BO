@@ -3,55 +3,79 @@
   <div class="col-12">
     <div class="card">
       <h5 class="title">Liste des clients</h5>
-      <br>
+      <br />
       <div class="container">
         <div class="title">
           <app-search
-          (searchs)="searchUsers($event)"
-          [keyword]="keyWord"
+            (searchs)="searchUsers($event)"
+            [keyword]="keyWord"
           ></app-search>
         </div>
-        <p-button label="Ajouter" icon="pi pi-plus" severity="success" (click)="showModalCreateUser()"></p-button>
+        <p-button
+          label="Ajouter"
+          icon="pi pi-plus"
+          severity="success"
+          (click)="showModalCreateUser()"
+        ></p-button>
       </div>
-      <br>
+      <br />
       <p-toast></p-toast>
       <!--p-confirmDialog key="positionDialog"></p-confirmDialog-->
-      <ngx-spinner [name]="'spinnerLoader'" bdColor="rgb(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box"
-                  [fullScreen]="true">
-                  <p style="color: white"> Chargement... </p>
-                </ngx-spinner>
-      <p-table [value]="users" dataKey="first_name" [expandedRowKeys]="expandedRows" responsiveLayout="scroll">
+      <ngx-spinner
+        [name]="'spinnerLoader'"
+        bdColor="rgb(0, 0, 0, 0.8)"
+        size="medium"
+        color="#fff"
+        type="square-jelly-box"
+        [fullScreen]="true"
+      >
+        <p style="color: white">Chargement...</p>
+      </ngx-spinner>
+      <p-table
+        [value]="users"
+        dataKey="first_name"
+        [expandedRowKeys]="expandedRows"
+        responsiveLayout="scroll"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th style="width: 5%"></th>
-            <th style="width: 22%;">Nom</th>
-            <th style="width: 19%;">Prénom(s)</th>
-            <th style="width: 20%;">Email</th>
-            <th style="width: 15%;">Niveau</th>
-            <th style="width: 12%;">Association</th>
-            <th style="width: 7%;">Action</th>
+            <th style="width: 22%">Nom</th>
+            <th style="width: 19%">Prénom(s)</th>
+            <th style="width: 20%">Email</th>
+            <th style="width: 15%">Niveau</th>
+            <th style="width: 12%">Association</th>
+            <th style="width: 7%">Action</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user let-expanded="expanded">
           <tr>
             <td>
-              <button type="button" pButton pRipple [pRowToggler]="user"
+              <!-- <button type="button" pButton pRipple [pRowToggler]="user"
                 class="p-button-text p-button-rounded p-button-plain"
-                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button> -->
             </td>
-            <td style="min-width: 12rem;">{{user.first_name}}</td>
-            <td>{{user.last_name}}</td>
-            <td style="min-width: 8rem;">{{user.email}}</td>
-            <td>{{user.level.description}}</td>
-            <td>{{user.association.name}}
-            </td>
+            <td style="min-width: 12rem">{{ user.first_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td style="min-width: 8rem">{{ user.email }}</td>
+            <td>{{ user.level.description }}</td>
+            <td>{{ user.association.name }}</td>
             <td>
               <div class="flex">
-                <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2"
-                  (click)="getDEtailsUsers(user.id)"></button>
-                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                  (click)="deleteUser(user.id, $event)">
-                </button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-eye"
+                  class="mr-2 p-button-rounded p-button-info"
+                  (click)="getDEtailsUsers(user.id)"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger"
+                  (click)="deleteUser(user.id, $event)"
+                ></button>
               </div>
             </td>
           </tr>
@@ -73,117 +97,197 @@
     </td>
     </tr>
     </ng-template> -->
-    </p-table>
-    <br>
-    <app-pagination *ngIf="users.length"
-    [dataNumberShow]="dataNumberShow"
-    [offset]="offset"
-    [limit]="limit"
-    [currentPage]="currentPage"
-    [totalPages]="totalPages"
-    (changePage)="changePage($event)"
-    (getPageNumbers)="getPageNumbers()"
-    >
-  
-    </app-pagination>
-    <div class="border-round border-1 surface-border p-4" *ngIf="skeleton">
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
-      </div>
-      <div class="my-2">
-        <p-skeleton width="100%" height="4rem"></p-skeleton>
+      </p-table>
+      <br />
+      <app-pagination
+        *ngIf="users.length"
+        [dataNumberShow]="dataNumberShow"
+        [offset]="offset"
+        [limit]="limit"
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        (changePage)="changePage($event)"
+        (getPageNumbers)="getPageNumbers()"
+      >
+      </app-pagination>
+      <div class="p-4 border-round border-1 surface-border" *ngIf="skeleton">
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
+        <div class="my-2">
+          <p-skeleton width="100%" height="4rem"></p-skeleton>
+        </div>
       </div>
     </div>
   </div>
+
+  <p-dialog
+    [(visible)]="checkDetailsUsers"
+    header="A propos de {{ detailUser.first_name }}"
+    [modal]="true"
+    [style]="{ width: '40%' }"
+    position="top"
+  >
+    <ng-template pTemplate="content">
+      <div class="col-12 md:col-12">
+        <div class="grid p-formgrid">
+          <div class="field col">
+            <h5 htmlFor="Nom">Nom</h5>
+            <input
+              pInputText
+              id="Nom"
+              type="text"
+              [(ngModel)]="detailUser.first_name"
+            />
+          </div>
+          <div class="field col">
+            <h5 htmlFor="Prénom(s)">Prénom(s)</h5>
+            <input
+              pInputText
+              id="Prénom(s)"
+              type="text"
+              [(ngModel)]="detailUser.last_name"
+            />
+          </div>
+        </div>
+        <div>
+          <h5>Niveau</h5>
+          <p-dropdown
+            [options]="niveaux"
+            [(ngModel)]="userBody.level_id"
+            optionLabel="description"
+            optionValue="id"
+            [filter]="true"
+            filterBy="description"
+            [showClear]="true"
+            placeholder="Choisir un niveau"
+          />
+          <h5>association</h5>
+          <p-dropdown
+            [options]="associations"
+            [(ngModel)]="userBody.association_id"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Choisir une association"
+          />
+          <h5>Email</h5>
+          <input
+            type="email"
+            pInputText
+            [(ngModel)]="detailUser.email"
+            placeholder="exemple@gmail.com"
+          />
+        </div>
+        <br />
+        <div class="field">
+          <h5>Status : {{ status ? "Activé" : "Désactivé" }}</h5>
+          <p-inputSwitch [(ngModel)]="status"></p-inputSwitch>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        pRipple
+        icon="pi pi-check"
+        class="p-button-text"
+        label="Modifier"
+        (click)="updateUser($event)"
+        [disabled]="disableUpdate"
+      ></button>
+    </ng-template>
+  </p-dialog>
+
+  <p-dialog
+    [(visible)]="modalCreateUser"
+    header="Nouveau utilisateur"
+    [modal]="true"
+    [style]="{ width: '40%' }"
+    position="top"
+  >
+    <ng-template pTemplate="content">
+      <div class="col-12 md:col-12">
+        <div class="grid p-formgrid">
+          <div class="field col">
+            <h5 htmlFor="Nom">Nom</h5>
+            <input
+              pInputText
+              id="Nom"
+              type="text"
+              [(ngModel)]="userBody.first_name"
+              placeholder="Nom"
+            />
+          </div>
+          <div class="field col">
+            <h5 htmlFor="Prénom(s)">Prénom(s)</h5>
+            <input
+              pInputText
+              id="Prénom(s)"
+              type="text"
+              [(ngModel)]="userBody.last_name"
+              placeholder="Prénom"
+            />
+          </div>
+        </div>
+        <div>
+          <h5>association</h5>
+          <p-dropdown
+            [options]="associations"
+            [(ngModel)]="userBody.association_id"
+            optionLabel="name"
+            optionValue="id"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Choisir une association"
+          />
+
+          <h5>Mot de passe</h5>
+          <input
+            type="password"
+            pInputText
+            [(ngModel)]="userBody.password"
+            placeholder="mot de passe"
+          />
+          <h5>Email</h5>
+          <input
+            type="email"
+            pInputText
+            [(ngModel)]="userBody.email"
+            placeholder="exemple@gmail.com"
+          />
+        </div>
+        <br />
+      </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        pRipple
+        icon="pi pi-check"
+        class="p-button-text"
+        label="Ajouter"
+        (click)="createUser()"
+        [disabled]="disableUpdate"
+      ></button>
+    </ng-template>
+  </p-dialog>
 </div>
-
-<p-dialog [(visible)]="checkDetailsUsers" header="A propos de {{detailUser.first_name}}" [modal]="true"
-  [style]="{width:'40%'}" position="top">
-  <ng-template pTemplate="content">
-    <div class="col-12 md:col-12">
-      <div class="p-formgrid grid">
-        <div class="field col">
-          <h5 htmlFor="Nom">Nom</h5>
-          <input pInputText id="Nom" type="text" [(ngModel)]="detailUser.first_name" />
-        </div>
-        <div class="field col">
-          <h5 htmlFor="Prénom(s)">Prénom(s)</h5>
-          <input pInputText id="Prénom(s)" type="text" [(ngModel)]="detailUser.last_name" />
-        </div>
-      </div>
-      <div>
-        <h5>Niveau</h5>
-        <p-dropdown 
-        [options]="niveaux" 
-        [(ngModel)]="userBody.level_id" 
-        optionLabel="description"
-        optionValue="id"
-        placeholder="Choisir un niveau" />
-        <h5>association</h5>
-        <p-dropdown 
-        [options]="associations" 
-        [(ngModel)]="userBody.association_id" 
-        optionLabel="name"
-        optionValue="id"
-        placeholder="Choisir une association" />
-        <h5>Email</h5>
-        <input type="email" pInputText [(ngModel)]="detailUser.email" placeholder="exemple@gmail.com">
-      </div>
-      <br>
-    </div>
-  </ng-template>
-  <ng-template pTemplate="footer">
-    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Modifier" (click)="updateUser()"
-      [disabled]="disableUpdate"></button>
-  </ng-template>
-</p-dialog>
-
-<p-dialog [(visible)]="modalCreateUser" header="Nouveau utilisateur" [modal]="true" [style]="{width:'40%'}" position="top">
-  <ng-template pTemplate="content">
-    <div class="col-12 md:col-12">
-      <div class="p-formgrid grid">
-        <div class="field col">
-          <h5 htmlFor="Nom">Nom</h5>
-          <input pInputText id="Nom" type="text" [(ngModel)]="userBody.first_name" placeholder="Nom" />
-        </div>
-        <div class="field col">
-          <h5 htmlFor="Prénom(s)">Prénom(s)</h5>
-          <input pInputText id="Prénom(s)" type="text" [(ngModel)]="userBody.last_name" placeholder="Prénom" />
-        </div>
-      </div>
-      <div>
-        <h5>association</h5>
-        <p-dropdown 
-        [options]="associations"
-        [(ngModel)]="userBody.association_id" 
-        optionLabel="name"
-        optionValue="id"
-        placeholder="Choisir une association" />
-        <h5>Mot de passe</h5>
-        <input type="password" pInputText [(ngModel)]="userBody.password" placeholder="mot de passe">
-        <h5>Email</h5>
-        <input type="email" pInputText [(ngModel)]="userBody.email" placeholder="exemple@gmail.com">
-      </div>
-      <br>
-    </div>
-  </ng-template>
-  <ng-template pTemplate="footer">
-    <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Ajouter" (click)="createUser()"
-      [disabled]="disableUpdate"></button>
-  </ng-template>
-</p-dialog>

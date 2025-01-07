@@ -4,56 +4,53 @@ import { CookieService } from "ngx-cookie-service";
 import { BehaviorSubject, Observable, map } from "rxjs";
 import { environment } from "src/environments/environment";
 import { jwtDecode } from "jwt-decode";
-import { PhotoService } from '../../demo/service/photo.service';
+import { PhotoService } from "../../demo/service/photo.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class ServiceService {
   private userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
-  getUsers(){
+  getUsers() {
     return this.http.get(`${environment.url}/api/users`, {});
   }
 
-  getAllAssociations(){
+  getAllAssociations() {
     return this.http.get(`${environment.url}/api/associations`, {});
   }
 
-  getAssociations(data: any): any { 
+  getAssociations(data: any): any {
     return this.http.post(`${environment.url}/api/findAssociation`, data);
-}
-
-  getAllLevel(){
-    return this.http.get(`${environment.url}/api/level`, {})
   }
 
-  getAllUsers(data:any): any {
+  getAllLevel() {
+    return this.http.get(`${environment.url}/api/level`, {});
+  }
+
+  getAllUsers(data: any): any {
     return this.http.post(`${environment.url}/api/searchUser`, data);
   }
 
-  getAllOrders(data:any): any {
+  getAllOrders(data: any): any {
     return this.http.post(`${environment.url}/api/searchOrder`, data);
   }
-
-  accept(data:any): any {
-    return this.http.post(`${environment.url}/api/accepter`, data)
+  acceptUsers(userIds: number[]): Observable<any> {
+    return this.http.post(`${environment.url}/api/accepter`, { userIds });
   }
 
-  getAllNotifications(data:any): any {
+  getAllNotifications(data: any): any {
     return this.http.post(`${environment.url}/api/searchNotif`, data);
   }
 
-  getAllPublicities(data:any): any {
+  getAllPublicities(data: any): any {
     return this.http.post(`${environment.url}/api/searchPub`, data);
   }
 
-  getAllCartes(data:any): any {
+  getAllCartes(data: any): any {
     return this.http.post(`${environment.url}/api/searchcartes`, data);
   }
-
 
   getAllContrat(id: any): any {
     return this.http.get(`${environment.url}/api/contrats/${id}`, id);
@@ -75,7 +72,7 @@ export class ServiceService {
     return this.http.post(`${environment.url}/api/users/info`, data);
   }
 
-  disable(data: any){
+  disable(data: any) {
     return this.http.post(`${environment.url}/api/users/data`, data);
   }
 
@@ -91,12 +88,12 @@ export class ServiceService {
           this.userSubject.next(user);
           const {
             authorisation: { token },
-          } = user;     
+          } = user;
           document.cookie = `sessionUser=${token}; path=/`;
           return user;
         })
       );
-  }  
+  }
 
   decodeToken(): any | null {
     try {
@@ -125,9 +122,7 @@ export class ServiceService {
         };
         return user;
       } else {
-        console.log(
-          "Token introuvable"
-        );
+        console.log("Token introuvable");
         return null;
       }
     } catch (error) {
@@ -140,11 +135,11 @@ export class ServiceService {
     return this.http.post<any>(`${environment.url}/api/upload`, uploadData);
   }
 
-  registerAssociation(data: any){
+  registerAssociation(data: any) {
     return this.http.post<any>(`${environment.url}/api/association`, data);
   }
 
-  updateAssociation(data: any){
+  updateAssociation(data: any) {
     return this.http.post<any>(`${environment.url}/api/updateAssoc`, data);
   }
   registerUser(data: any) {
@@ -169,7 +164,7 @@ export class ServiceService {
 
   deletedoc(id: any) {
     return this.http.delete(`${environment.url}/api/documents/${id}`, id);
-  }  
+  }
 
   userStateNotification(data: any) {
     return this.http.post<any>(`${environment.url}/api/userNotif`, data);
@@ -184,8 +179,8 @@ export class ServiceService {
   }
 
   registerNotification(data: any) {
-      return this.http.post<any>(`${environment.url}/api/pushNotif`, data);
-    }
+    return this.http.post<any>(`${environment.url}/api/pushNotif`, data);
+  }
 
   deleteNotification(id: any) {
     return this.http.delete(`${environment.url}/api/notifications/${id}`, id);
@@ -219,16 +214,16 @@ export class ServiceService {
   getDetailsPub(id: any): any {
     return this.http.get(`${environment.url}/api/banieres/${id}`, id);
   }
-  getDetailsAssoc(id: any ): any {
-    return this.http.post(`${environment.url}/api/association/${id}`, id)
+  getDetailsAssoc(id: any): any {
+    return this.http.post(`${environment.url}/api/association/${id}`, id);
   }
   getDetailsCard(id: any): any {
     return this.http.get(`${environment.url}/api/cartes/${id}`, id);
   }
-  upload_logo(data : any){
-    return this.http.post<any>(`${environment.url}/api/upload_logo`, data)
+  upload_logo(data: any) {
+    return this.http.post<any>(`${environment.url}/api/upload_logo`, data);
   }
-  deleteAssociation(id: any){
+  deleteAssociation(id: any) {
     return this.http.delete(`${environment.url}/api/association/${id}`, id);
   }
 }
